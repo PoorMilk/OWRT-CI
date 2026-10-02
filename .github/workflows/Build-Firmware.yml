@@ -1,0 +1,44 @@
+name: Build IPQ60XX-WIFI-NO
+
+on:
+  workflow_dispatch:
+  schedule:
+    - cron: "0 18 * * 2"
+
+permissions: write-all
+
+jobs:
+  build:
+    uses: ./.github/workflows/WRT-CORE.yml
+    with:
+      WRT_CONFIG: IPQ60XX-WIFI-NO
+      WRT_THEME: aurora
+      WRT_NAME: OWRT
+      WRT_SSID: OWRT
+      WRT_WORD: ""
+      WRT_IP: 192.168.10.1
+      WRT_PW: None
+      WRT_REPO: https://github.com/VIKINGYFY/immortalwrt.git
+      WRT_BRANCH: main
+      WRT_SOURCE: VIKINGYFY/immortalwrt
+      WRT_TEST: false
+
+  cleanup:
+    needs: build
+    runs-on: ubuntu-latest
+    steps:
+      - name: Cleanup Old Releases and Runs
+        env:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        run: |
+          gh api --paginate repos/${{ github.repository }}/releases \
+            --jq 'sort_by(.created_at) | reverse | .[5:] | .[]? | "\(.id) \(.tag_name)"' | \
+          while read -r id tag; do
+            [ -n "$id" ] && gh api -X DELETE repos/${{ github.repository }}/releases/$id || true
+            [ -n "$tag" ] && gh api -X DELETE repos/${{ github.repository }}/git/refs/tags/$tag || true
+          done
+          
+          gh run list --repo "${{ github.repository }}" --limit 100 --json databaseId \
+            --jq '.[5:] | .[].databaseId' | while read -r run_id; do
+            [ -n "$run_id" ] && gh run delete "$run_id" --repo "${{ github.repository }}" || true
+          done
