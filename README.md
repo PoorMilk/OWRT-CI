@@ -1,28 +1,4 @@
-# 高质量<免费>交流群
-
-[IPQ技术讨论群](https://qm.qq.com/q/v7nMhzB4oU)
-
-# 高质量<付费>中转站
-
-[LiBwrt-Ai](https://api.zipimg.cn/register?aff=LR7FSZ2ZZ4D3)
-
-# 本地编译器
-
-https://github.com/VIKINGYFY/OWRT-Tools.git
-
-# 自用修改版插件
-
-https://github.com/VIKINGYFY/packages.git
-
-# OpenWRT-CI
-
-官方版：
-
-https://github.com/immortalwrt/immortalwrt.git
-
-自用版：
-
-https://github.com/VIKINGYFY/immortalwrt.git
+云编译OWRT开源固件：兆能M2、NN6000 V2、LY1800、SY6010
 
 # U-BOOT
 
@@ -57,6 +33,3 @@ workflows——自定义CI配置
 Scripts——自定义脚本
 
 Config——自定义配置
-
-#
-[![Stargazers over time](https://starchart.cc/VIKINGYFY/OpenWRT-CI.svg?variant=adaptive)](https://starchart.cc/VIKINGYFY/OpenWRT-CI)
