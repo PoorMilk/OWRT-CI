@@ -1,0 +1,40 @@
+name: Sync Upstream & Protect Files
+
+on:
+  schedule:
+    - cron: '0 10 * * 2'
+  workflow_dispatch:
+
+permissions: write-all
+
+jobs:
+  sync:
+    runs-on: ubuntu-latest
+    steps:
+      - name: Checkout Repository
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          ref: main
+
+      - name: Configure Git
+        run: |
+          git config --global user.name 'GitHub Actions'
+          git config --global user.email 'actions@github.com'
+
+      - name: Sync from Upstream
+        run: |
+          git remote add upstream https://github.com/VIKINGYFY/OpenWRT-CI.git
+          git fetch upstream
+          git merge upstream/main --no-edit || true
+
+      - name: Restore Protected Files and Folders
+        run: |
+          git checkout origin/main -- \
+            README.md \
+            Config/GENERAL.txt \
+            Config/IPQ60XX-WIFI-NO.txt \
+            .github/workflows/
+          
+          git commit -am "chore: auto sync and restore protected files" || echo "No changes to commit"
+          git push origin main
